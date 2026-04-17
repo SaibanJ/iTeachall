@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
 
 const navItems = [
@@ -14,6 +15,11 @@ const navItems = [
 const NavItems = () => {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     setOpen(false);
@@ -25,6 +31,57 @@ const NavItems = () => {
       document.body.style.overflow = '';
     };
   }, [open]);
+
+  const drawer = open && (
+    <div
+      style={{
+        position: 'fixed',
+        top: '60px',
+        left: 0,
+        right: 0,
+        bottom: 0,
+        background: '#000',
+        zIndex: 9999,
+        display: 'flex',
+        flexDirection: 'column',
+      }}
+    >
+      <nav style={{ display: 'flex', flexDirection: 'column', padding: '24px', gap: '8px' }}>
+        {navItems.map(({ label, href }) => (
+          <Link
+            href={href}
+            key={label}
+            className={cn('text-lg font-semibold px-4 py-3 rounded-xl transition-colors')}
+            style={
+              pathname === href
+                ? { background: 'rgba(168,85,247,0.12)', color: '#c084fc' }
+                : { color: 'rgba(255,255,255,0.5)' }
+            }
+          >
+            {label}
+          </Link>
+        ))}
+      </nav>
+
+      <div style={{ height: '1px', margin: '0 24px', background: 'rgba(255,255,255,0.06)' }} />
+
+      <div style={{ padding: '24px' }}>
+        <SignedOut>
+          <SignInButton>
+            <button className="btn-signin" style={{ width: '100%' }}>
+              Sign In
+            </button>
+          </SignInButton>
+        </SignedOut>
+        <SignedIn>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <UserButton />
+            <span style={{ fontSize: '14px', color: 'rgba(255,255,255,0.45)' }}>Account</span>
+          </div>
+        </SignedIn>
+      </div>
+    </div>
+  );
 
   return (
     <>
@@ -72,53 +129,8 @@ const NavItems = () => {
         />
       </button>
 
-      {/* Mobile drawer */}
-      {open && (
-        <div
-          className="sm:hidden fixed inset-0 top-[60px] z-[49] flex flex-col"
-          style={{ background: '#000000' }}
-        >
-          <nav className="flex flex-col p-6 gap-2">
-            {navItems.map(({ label, href }) => (
-              <Link
-                href={href}
-                key={label}
-                className={cn(
-                  'text-lg font-semibold px-4 py-3 rounded-xl transition-colors',
-                  pathname === href
-                    ? 'text-white'
-                    : 'text-white/50 hover:text-white hover:bg-white/5'
-                )}
-                style={
-                  pathname === href
-                    ? { background: 'rgba(168,85,247,0.12)', color: '#c084fc' }
-                    : undefined
-                }
-              >
-                {label}
-              </Link>
-            ))}
-          </nav>
-
-          <div className="h-px mx-6" style={{ background: 'rgba(255,255,255,0.06)' }} />
-
-          <div className="p-6">
-            <SignedOut>
-              <SignInButton>
-                <button className="btn-signin w-full">Sign In</button>
-              </SignInButton>
-            </SignedOut>
-            <SignedIn>
-              <div className="flex items-center gap-3">
-                <UserButton />
-                <span className="text-sm" style={{ color: 'rgba(255,255,255,0.45)' }}>
-                  Account
-                </span>
-              </div>
-            </SignedIn>
-          </div>
-        </div>
-      )}
+      {/* Portal drawer — escapes navbar stacking context */}
+      {mounted && createPortal(drawer, document.body)}
     </>
   );
 };
