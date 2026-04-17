@@ -105,7 +105,7 @@ const Page = async () => {
           </Link>
         </div>
         <div className="companions-grid">
-          {companions.map(companion => (
+          {companions.filter(Boolean).map(companion => (
             <CompanionCard
               color={getSubjectColor(companion.subject)}
               key={companion.id}

@@ -49,7 +49,7 @@ const CompanionsList = ({ title, companions, classNames }: CompanionsListProps) 
       </TableHeader>
       <TableBody>
         {companions
-          ?.filter(companion => companion !== undefined)
+          ?.filter(Boolean)
           .map(({ id, subject, name, topic, duration }) => {
             const color = getSubjectColor(subject);
             return (
