@@ -2,13 +2,15 @@ import React from 'react';
 import CompanionCard from '@/components/CompanionCard';
 import CompanionsList from '@/components/CompanionsList';
 import CTA from '@/components/CTA';
-import { getAllCompanions, getRecentSessions } from '@/lib/actions/companion.actions';
+import { getUserCompanions, getRecentSessions } from '@/lib/actions/companion.actions';
 import { getSubjectColor } from '@/lib/utils';
 import Link from 'next/link';
+import { auth } from '@clerk/nextjs/server';
 
 const Page = async () => {
-  const companions = await getAllCompanions({ limit: 3 });
-  const recentSessionsCompanions = await getRecentSessions(10);
+  const { userId } = await auth();
+  const companions = userId ? await getUserCompanions(userId) : [];
+  const recentSessionsCompanions = userId ? await getRecentSessions(10) : [];
 
   return (
     <main>
@@ -77,7 +79,7 @@ const Page = async () => {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <h2 className="text-lg font-bold" style={{ color: 'rgba(255,255,255,0.9)' }}>
-              Popular Companions
+              My Companions
             </h2>
             <span
               className="text-xs px-2 py-0.5 rounded-full font-semibold"
