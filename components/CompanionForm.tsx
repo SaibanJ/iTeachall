@@ -32,24 +32,22 @@ const formSchema = z.object({
   duration: z.coerce.number().min(1, { message: 'Duration is required.' }),
 });
 
-const labelStyle = { color: 'var(--text-secondary)', fontSize: '0.8rem', fontWeight: '500' };
+const labelStyle: React.CSSProperties = {
+  color: 'rgba(255,255,255,0.45)',
+  fontSize: '0.75rem',
+  fontWeight: 600,
+  letterSpacing: '0.05em',
+  textTransform: 'uppercase',
+};
 
 const CompanionForm = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      name: '',
-      subject: '',
-      topic: '',
-      voice: '',
-      style: '',
-      duration: 15,
-    },
+    defaultValues: { name: '', subject: '', topic: '', voice: '', style: '', duration: 15 },
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     const companion = await createCompanion(values);
-
     if (companion) {
       redirect(`/companions/${companion.id}`);
     } else {
@@ -59,7 +57,7 @@ const CompanionForm = () => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-5">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-6">
         <FormField
           control={form.control}
           name="name"
@@ -109,7 +107,7 @@ const CompanionForm = () => {
             name="duration"
             render={({ field }) => (
               <FormItem>
-                <FormLabel style={labelStyle}>Session Duration (minutes)</FormLabel>
+                <FormLabel style={labelStyle}>Duration (minutes)</FormLabel>
                 <FormControl>
                   <Input type="number" placeholder="15" {...field} className="input" />
                 </FormControl>
@@ -129,11 +127,22 @@ const CompanionForm = () => {
                 <textarea
                   placeholder="e.g. Derivatives and integrals in calculus"
                   {...field}
-                  className="input min-h-[80px] resize-none p-2 w-full rounded-lg text-sm"
+                  rows={3}
+                  className="w-full rounded-xl text-sm resize-none p-3"
                   style={{
-                    background: 'var(--surface-2)',
-                    border: '1px solid var(--border-bright)',
-                    color: 'var(--text)',
+                    background: 'rgba(255,255,255,0.04)',
+                    border: '1px solid rgba(255,255,255,0.1)',
+                    color: 'rgba(255,255,255,0.9)',
+                    outline: 'none',
+                    transition: 'border-color 0.2s, box-shadow 0.2s',
+                  }}
+                  onFocus={e => {
+                    e.target.style.borderColor = 'rgba(168,85,247,0.6)';
+                    e.target.style.boxShadow = '0 0 0 3px rgba(168,85,247,0.12)';
+                  }}
+                  onBlur={e => {
+                    e.target.style.borderColor = 'rgba(255,255,255,0.1)';
+                    e.target.style.boxShadow = 'none';
                   }}
                 />
               </FormControl>
@@ -196,16 +205,26 @@ const CompanionForm = () => {
           />
         </div>
 
+        <div
+          className="h-px w-full"
+          style={{
+            background:
+              'linear-gradient(90deg, transparent, rgba(168,85,247,0.3), rgba(236,72,153,0.2), transparent)',
+          }}
+        />
+
         <Button
           type="submit"
-          className="w-full cursor-pointer mt-2 font-semibold"
+          className="w-full cursor-pointer font-bold tracking-wide py-5"
           style={{
-            background: 'linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%)',
-            boxShadow: '0 0 20px rgba(139,92,246,0.3)',
+            background: 'linear-gradient(135deg, #a855f7 0%, #7c3aed 100%)',
+            boxShadow: '0 0 30px rgba(168,85,247,0.35)',
             color: 'white',
+            borderRadius: '14px',
+            border: '1px solid rgba(168,85,247,0.4)',
           }}
         >
-          Build Companion
+          Build Companion →
         </Button>
       </form>
     </Form>

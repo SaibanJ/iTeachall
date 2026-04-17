@@ -12,41 +12,51 @@ interface CompanionCardProps {
 
 const CompanionCard = ({ id, name, topic, subject, duration, color }: CompanionCardProps) => (
   <article className="companion-card group">
+    {/* Subject icon */}
     <div className="flex justify-between items-start">
       <div
-        className="size-12 rounded-xl flex items-center justify-center shrink-0"
-        style={{ backgroundColor: color + '22', border: `1px solid ${color}44` }}
+        className="size-11 rounded-xl flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:scale-110"
+        style={{
+          background: `linear-gradient(135deg, ${color}22 0%, ${color}11 100%)`,
+          border: `1px solid ${color}33`,
+          boxShadow: `0 0 20px ${color}15`,
+        }}
       >
-        <Image src={`/icons/${subject}.svg`} alt={subject} width={24} height={24} />
+        <Image src={`/icons/${subject}.svg`} alt={subject} width={22} height={22} />
       </div>
       <div className="subject-badge">{subject}</div>
     </div>
 
-    <div className="flex flex-col gap-1.5">
-      <h2 className="text-lg font-bold leading-tight" style={{ color: 'var(--text)' }}>
+    {/* Info */}
+    <div className="flex flex-col gap-1.5 flex-1">
+      <h2
+        className="text-base font-bold leading-tight transition-colors duration-200 group-hover:text-white"
+        style={{ color: 'rgba(255,255,255,0.9)' }}
+      >
         {name}
       </h2>
-      <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+      <p
+        className="text-sm leading-relaxed line-clamp-2"
+        style={{ color: 'rgba(255,255,255,0.45)' }}
+      >
         {topic}
       </p>
     </div>
 
-    <div className="flex items-center justify-between">
+    {/* Footer */}
+    <div className="flex items-center justify-between pt-1">
       <div className="flex items-center gap-1.5">
-        <Image
-          src="/icons/clock.svg"
-          alt="duration"
-          width={13}
-          height={13}
-          style={{ opacity: 0.5 }}
+        <div
+          className="size-1.5 rounded-full"
+          style={{ background: `${color}`, boxShadow: `0 0 6px ${color}` }}
         />
-        <span className="text-xs" style={{ color: 'var(--text-muted)' }}>
+        <span className="text-xs font-medium" style={{ color: 'rgba(255,255,255,0.35)' }}>
           {duration} min
         </span>
       </div>
 
       <Link href={`/companions/${id}`}>
-        <button className="btn-primary text-xs px-3 py-1.5">Start Session</button>
+        <button className="btn-primary text-xs px-4 py-2">Launch →</button>
       </Link>
     </div>
   </article>

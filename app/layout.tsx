@@ -20,9 +20,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider appearance={{ variables: { colorPrimary: '#8b5cf6' } }}>
+    <ClerkProvider appearance={{ variables: { colorPrimary: '#a855f7' } }}>
       <html lang="en">
         <body className={`${bricolage.variable} antialiased`}>
+          {/* Animated mesh background */}
+          <div className="mesh-bg" aria-hidden="true">
+            <div className="orb orb-1" />
+            <div className="orb orb-2" />
+            <div className="orb orb-3" />
+          </div>
           <Navbar />
           {children}
         </body>

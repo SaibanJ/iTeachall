@@ -7,17 +7,33 @@ const NewCompanion = async () => {
   if (!userId) redirect('/sign-in');
 
   return (
-    <main className="max-w-[700px]! mx-auto! items-stretch!">
+    <main style={{ maxWidth: '680px' }}>
       <div className="flex flex-col gap-2">
-        <h1 style={{ color: 'var(--text)' }}>Companion Builder</h1>
-        <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+        <div
+          className="inline-flex items-center gap-2 text-xs font-bold tracking-widest uppercase rounded-full px-3 py-1 w-fit mb-1"
+          style={{
+            background: 'rgba(168,85,247,0.08)',
+            color: '#c084fc',
+            border: '1px solid rgba(168,85,247,0.18)',
+          }}
+        >
+          ✦ Builder
+        </div>
+        <h1 className="text-3xl font-bold" style={{ color: 'rgba(255,255,255,0.95)' }}>
+          New <span className="text-gradient-static">Companion</span>
+        </h1>
+        <p className="text-sm" style={{ color: 'rgba(255,255,255,0.35)' }}>
           Configure your AI tutor — name it, set the subject, and choose a voice style.
         </p>
       </div>
 
       <div
         className="rounded-2xl p-6"
-        style={{ background: 'var(--card)', border: '1px solid var(--border)' }}
+        style={{
+          background: 'rgba(255,255,255,0.02)',
+          border: '1px solid rgba(255,255,255,0.08)',
+          backdropFilter: 'blur(10px)',
+        }}
       >
         <CompanionForm />
       </div>
